@@ -1,0 +1,23 @@
+{
+  "name": "webshell-for-campaign",
+  "version": "1.0.0",
+  "description": "## Nginx Setup ```bash // /usr/local/nginx/conf/nginx.conf worker_processes  1;",
+  "main": "webshell.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uetsymphonique/webshell-for-campaign.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uetsymphonique/webshell-for-campaign/issues"
+  },
+  "homepage": "https://github.com/uetsymphonique/webshell-for-campaign#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "multer": "^1.4.5-lts.2"
+  }
+}

